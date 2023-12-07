@@ -1,9 +1,9 @@
--- https://stackoverflow.com/questions/9754794/read-until-end-of-stream-in-haskell
 import Control.Monad
 import Data.List.Split
 import System.Environment (getArgs)
-
 import Text.Regex.TDFA
+
+type Match = (String, String, String, [String])
 
 (~>) = flip (.)
 interlayer :: Monad m => m a -> (a -> b) -> (b -> m c) -> m c
@@ -12,17 +12,10 @@ interlayer from main to = from >>= main ~> to
 parseInt :: String -> Int
 parseInt s = read s
 
-type Match = (String, String, String, [String])
-
 type Round = (Int, Int, Int)
-maxRound (r1, g1, b1) (r2, g2, b2) = 
-  (max r1 r2, max g1 g2, max b1 b2)
-
 data Game = Game Int [Round] deriving (Show, Eq)
-gId (Game i _) = i
 
-sums :: [Game] -> Int
-sums = sum . map gId
+maxRound (r1, g1, b1) (r2, g2, b2) = (max r1 r2, max g1 g2, max b1 b2)
 
 parse :: String -> Game 
 parse s = let (_, _, _, [gId', whole]) = s =~ "Game ([0-9]+): (.*)" :: Match
@@ -44,7 +37,6 @@ parse s = let (_, _, _, [gId', whole]) = s =~ "Game ([0-9]+): (.*)" :: Match
 answer games = do
   Game gId rounds <- games
   return (gId, foldl1 maxRound rounds)
-
 
 parts :: [() -> IO ()]
 parts = [
