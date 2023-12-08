@@ -6,15 +6,12 @@ import Text.Regex.TDFA
 type Match = (String, String, String, [String])
 
 (~>) = flip (.)
-interlayer :: Monad m => m a -> (a -> b) -> (b -> m c) -> m c
-interlayer from main to = from >>= main ~> to
 
 parseInt :: String -> Int
 parseInt s = read s
 
 ints :: String -> [Int]
 ints s = map parseInt $ words s
-
 
 solve :: Double -> Double -> [Double]
 solve t record = -- x * (t - x) > record
