@@ -1,4 +1,4 @@
-(* oc str.cma day2.ml *)
+(* oc str.cma day1.ml *)
 (* #load "str.cma";; *)
 open List
 open String
@@ -11,7 +11,6 @@ let rec last l = match l with
     | [] -> raise (Exc "last: empty list")
     | [h] -> h
     | (_::t) -> last t 
-
 
 let explode s = s |> String.to_seq |> List.of_seq ;;
 
@@ -27,8 +26,9 @@ let prepare s = List.fold_left
 
 
 let char2str c = String.of_seq @@ List.to_seq [c]
-let get_num s = 
-  let d = List.filter digit @@ explode @@ prepare s in
+
+let get_num s =
+  let d = List.filter digit @@ explode s in
     int_of_string @@ String.concat "" @@ List.map char2str [List.hd d; last d]
     ;;
 
@@ -43,7 +43,10 @@ let lines = ref [] in
     done;
     !lines
   with End_of_file ->
-    List.rev !lines) in
-      print_int @@ sum @@ List.map get_num ln
-      (* List.map (print_endline << prepare) ln *)
+    List.rev !lines) in 
+      begin
+        print_int @@ sum @@ List.map get_num ln ;
+        print_endline "";
+        print_int @@ sum @@ List.map (get_num << prepare) ln
+      end ;;
 
