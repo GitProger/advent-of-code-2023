@@ -45,9 +45,10 @@ galaxies field =
         $ filter snd $ withInd row)
     $ withInd field
 
-rows f = map fst $ filter ((all not) . snd) $ withInd f
-cols = rows . transpose
+emptyRows f = map fst $ filter ((all not) . snd) $ withInd f
+emptyCols = emptyRows . transpose
 
+solve :: Int -> [[Bool]] -> Int
 solve gap field =
   let g = galaxies field
       byRow = VC.fromList $ sort g
@@ -55,8 +56,8 @@ solve gap field =
       orig  = sum [dist a b | a <- g, b <- g, a < b]
   in
     orig
-     + (sum $ map (\rowI -> partition byRow rowI) $ rows field)
-     + (sum $ map (\colI -> partition byCol colI) $ cols field)
+     + (sum $ map (\rowI -> partition byRow rowI) $ emptyRows field)
+     + (sum $ map (\colI -> partition byCol colI) $ emptyCols field)
   where
     -- `mid` row/col required empty
     partition a mid = 
